@@ -2,6 +2,8 @@
 
 TypingMaster Native Pro adalah aplikasi **latihan mengetik berbasis web** yang dirancang untuk meningkatkan kecepatan (WPM), akurasi, dan konsistensi mengetik dengan berbagai **mode latihan dan tantangan**. Aplikasi ini berjalan **tanpa backend**, sepenuhnya menggunakan **HTML, CSS, dan JavaScript (Vanilla)**.
 
+![App Screenshot](assets/screenshot-typing.png)
+
 ---
 
 ## 🚀 Fitur Utama
@@ -33,8 +35,8 @@ TypingMaster Native Pro adalah aplikasi **latihan mengetik berbasis web** yang d
 - **Numeric Master** – kata + angka
 - **Symbolic Pro** – kata + simbol
 - **Sudden Death** – satu salah = gagal
-- **No Space Mode**
-- **Exclude Letter Mode**
+- **No Space Mode** - tanpa space
+- **Exclude Letter Mode** - hilangkan huruf
 - **Ghost Race** – lawan hasil sebelumnya
 - **Time Attack** – batas waktu
 
@@ -46,11 +48,15 @@ TypingMaster Native Pro adalah aplikasi **latihan mengetik berbasis web** yang d
 ---
 
 ## 🗂️ Struktur Folder
-- index.html # Struktur utama aplikasi
-- style.css # Styling & UI
-- script.js # Logika aplikasi & engine mengetik
-- words.json # Bank kata (ID & EN, multi level)
-- README.md
+    ├── index.html          # Halaman utama aplikasi
+    ├── style.css           # Styling & UI komponen
+    ├── script.js           # Logika aplikasi & engine mengetik
+    ├── words.json          # Bank kata (ID & EN, multi level)
+    ├── music # Folder musik
+      ├── click.mp3           # Efek suara ketikan benar
+      ├── error.mp3           # Efek suara ketikan salah
+      └── bg-music.mp3        # Musik latar belakang (opsional)
+    └── README.md           # Dokumentasi
 
 
 ---
