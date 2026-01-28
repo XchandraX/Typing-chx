@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypingMaster Native Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- NAVBAR UTAMA -->
+    <nav class="navbar">
+        <div class="logo">
+            TYPING MASTER <span class="highlight">NATIVE</span>
+        </div>
+        <div class="nav-links">
+            <button onclick="showPage('typing-page')" class="nav-btn active" id="nav-typing">
+                Latihan
+            </button>
+            <button onclick="showPage('challenges-page')" class="nav-btn" id="nav-challenges">
+                Tantangan
+            </button>
+            <button onclick="showPage('dashboard-page')" class="nav-btn" id="nav-dashboard">
+                Dashboard
+            </button>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <div class="container">
+        <!-- HALAMAN 1: TYPING UTAMA -->
+        <section id="typing-page" class="page active">
+            <!-- BAR SETELAN -->
+            <div class="settings-bar">
+                <!-- Selektor Bahasa -->
+                <select id="lang-selector">
+                    <option value="id">Indonesia</option>
+                    <option value="en">English</option>
+                </select>
+                
+                <!-- Selektor Level -->
+                <select id="level-selector">
+                    <option value="1">Level 1: Pemula</option>
+                    <option value="2">Level 2: Mudah</option>
+                    <option value="3">Level 3: Normal</option>
+                    <option value="4">Level 4: Sulit</option>
+                    <option value="5">Level 5: Legenda</option>
+                </select>
+                
+                <!-- Selektor Panjang Teks -->
+                <select id="length-selector">
+                    <option value="short">Pendek (5 Kata)</option>
+                    <option value="medium" selected>Medium (10 Kata)</option>
+                    <option value="long">Panjang (15 Kata)</option>
+                </select>
+                
+                <!-- Selektor Mode Huruf -->
+                <select id="case-mode">
+                    <option value="lowercase">Kecil Semua (abc)</option>
+                    <option value="uppercase">BESAR SEMUA (ABC)</option>
+                    <option value="mixed">Campuran (Abc)</option>
+                </select>
+
+                <!-- Display Tantangan Aktif -->
+                <div id="active-challenge-display" class="challenge-badge-container"></div>
+
+                <!-- Tombol Mode Pro -->
+                <button id="pro-mode-btn" onclick="toggleProMode()" class="btn-action btn-blue">
+                    Mode: Pemula (Warna On)
+                </button>
+            </div>
+
+            <!-- AREA DISPLAY TEKS -->
+            <div id="text-display" class="text-display" onclick="focusInput()"></div>
+            
+            <!-- INPUT TERSEMBUNYI UNTUK CAPTURE KEYBOARD -->
+            <input type="text" id="typing-input" autocomplete="off" autofocus>
+
+            <!-- STATISTIK REAL-TIME -->
+            <div class="stats-grid three-cols">
+                <div class="stat-card border-green">
+                    <h3>WPM</h3>
+                    <p id="live-wpm">0</p>
+                </div>
+                <div class="stat-card border-blue">
+                    <h3>Akurasi</h3>
+                    <p id="live-acc">100%</p>
+                </div>
+                <div class="stat-card border-red">
+                    <h3>Waktu</h3>
+                    <p id="live-timer">0s</p>
+                </div>
+            </div>
+
+            <!-- VISUALISASI KEYBOARD -->
+            <div class="keyboard-container">
+                <!-- LEGENDA WARNA JARI -->
+                <div class="keyboard-legend">
+                    <div class="legend-item"><span class="dot" style="background:#ec4899"></span> Kelingking L</div>
+                    <div class="legend-item"><span class="dot" style="background:#3b82f6"></span> Manis L</div>
+                    <div class="legend-item"><span class="dot" style="background:#eab308"></span> Tengah L</div>
+                    <div class="legend-item"><span class="dot" style="background:#22c55e"></span> Telunjuk L</div>
+                    <div class="legend-item"><span class="dot" style="background:#f97316"></span> Jempol</div>
+                    <div class="legend-item"><span class="dot" style="background:#10b981"></span> Telunjuk R</div>
+                    <div class="legend-item"><span class="dot" style="background:#facc15"></span> Tengah R</div>
+                    <div class="legend-item"><span class="dot" style="background:#60a5fa"></span> Manis R</div>
+                    <div class="legend-item"><span class="dot" style="background:#f472b6"></span> Kelingking R</div>
+                </div>
+
+                <!-- BARIS 1: ANGKA & SYMBOL -->
+                <div class="keyboard-row">
+                    <div class="key f-l-pinky" id="key-`" data-key="`" data-shift="~">`</div>
+                    <div class="key f-l-pinky" id="key-1" data-key="1" data-shift="!">1</div>
+                    <div class="key f-l-ring" id="key-2" data-key="2" data-shift="@">2</div>
+                    <div class="key f-l-mid" id="key-3" data-key="3" data-shift="#">3</div>
+                    <div class="key f-l-index" id="key-4" data-key="4" data-shift="$">4</div>
+                    <div class="key f-l-index" id="key-5" data-key="5" data-shift="%">5</div>
+                    <div class="key f-r-index" id="key-6" data-key="6" data-shift="^">6</div>
+                    <div class="key f-r-index" id="key-7" data-key="7" data-shift="&">&</div>
+                    <div class="key f-r-mid" id="key-8" data-key="8" data-shift="*">*</div>
+                    <div class="key f-r-ring" id="key-9" data-key="9" data-shift="(">(</div>
+                    <div class="key f-r-pinky" id="key-0" data-key="0" data-shift=")">)</div>
+                    <div class="key f-r-pinky" id="key--" data-key="-" data-shift="_">-</div>
+                    <div class="key f-r-pinky" id="key-=" data-key="=" data-shift="+">+</div>
+                    <div class="key f-r-pinky backspace" id="key-Backspace">Back</div>
+                </div>
+                
+                <!-- BARIS 2: HURUF ATAS -->
+                <div class="keyboard-row">
+                    <div class="key f-l-pinky tab">Tab</div>
+                    <div class="key f-l-pinky" id="key-q" data-key="q">Q</div>
+                    <div class="key f-l-ring" id="key-w" data-key="w">W</div>
+                    <div class="key f-l-mid" id="key-e" data-key="e">E</div>
+                    <div class="key f-l-index" id="key-r" data-key="r">R</div>
+                    <div class="key f-l-index" id="key-t" data-key="t">T</div>
+                    <div class="key f-r-index" id="key-y" data-key="y">Y</div>
+                    <div class="key f-r-index" id="key-u" data-key="u">U</div>
+                    <div class="key f-r-mid" id="key-i" data-key="i">I</div>
+                    <div class="key f-r-ring" id="key-o" data-key="o">O</div>
+                    <div class="key f-r-pinky" id="key-p" data-key="p">P</div>
+                    <div class="key f-r-pinky" id="key-[" data-key="[" data-shift="{">[</div>
+                    <div class="key f-r-pinky" id="key-]" data-key="]" data-shift="}">]</div>
+                    <div class="key f-r-pinky" id="key-\" data-key="\" data-shift="|">\</div>
+                </div>
+                
+                <!-- BARIS 3: HURUF TENGAH -->
+                <div class="keyboard-row">
+                    <div class="key f-l-pinky caps">Caps</div>
+                    <div class="key f-l-pinky" id="key-a" data-key="a">A</div>
+                    <div class="key f-l-ring" id="key-s" data-key="s">S</div>
+                    <div class="key f-l-mid" id="key-d" data-key="d">D</div>
+                    <div class="key f-l-index key-grip" id="key-f" data-key="f">F</div>
+                    <div class="key f-l-index" id="key-g" data-key="g">G</div>
+                    <div class="key f-r-index" id="key-h" data-key="h">H</div>
+                    <div class="key f-r-index key-grip" id="key-j" data-key="j">J</div>
+                    <div class="key f-r-mid" id="key-k" data-key="k">K</div>
+                    <div class="key f-r-ring" id="key-l" data-key="l">L</div>
+                    <div class="key f-r-pinky" id="key-;" data-key=";" data-shift=":">;</div>
+                    <div class="key f-r-pinky" id="key-'" data-key="'" data-shift='"'>'</div>
+                    <div class="key f-r-pinky enter">Enter</div>
+                </div>
+                
+                <!-- BARIS 4: HURUF BAWAH -->
+                <div class="keyboard-row">
+                    <div class="key f-l-pinky shift" id="key-Shift">Shift</div>
+                    <div class="key f-l-pinky" id="key-z" data-key="z">Z</div>
+                    <div class="key f-l-ring" id="key-x" data-key="x">X</div>
+                    <div class="key f-l-mid" id="key-c" data-key="c">C</div>
+                    <div class="key f-l-index" id="key-v" data-key="v">V</div>
+                    <div class="key f-l-index" id="key-b" data-key="b">B</div>
+                    <div class="key f-r-index" id="key-n" data-key="n">N</div>
+                    <div class="key f-r-index" id="key-m" data-key="m">M</div>
+                    <div class="key f-r-mid" id="key-," data-key="," data-shift="<">,</div>
+                    <div class="key f-r-ring" id="key-." data-key="." data-shift=">">.</div>
+                    <div class="key f-r-pinky" id="key-/" data-key="/" data-shift="?">/</div>
+                    <div class="key f-r-pinky shift">Shift</div>
+                </div>
+                
+                <!-- BARIS 5: SPACE BAR -->
+                <div class="keyboard-row">
+                    <div class="key space f-thumb" id="key- " data-key=" ">Space</div>
+                </div>
+            </div>
+
+            <!-- KONTROL TEST -->
+            <div id="test-controls" style="margin-top: 20px; display: flex; gap: 10px;"></div>
+        </section>
+
+        <!-- HALAMAN 2: TANTANGAN -->
+        <section id="challenges-page" class="page">
+            <!-- HEADER TANTANGAN -->
+            <div class="challenge-header">
+                <div>
+                    <h2>Arena Tantangan ⚔️</h2>
+                    <p>Capai WPM lebih tinggi untuk membuka mode baru!</p>
+
+                    <!-- INFO TANTANGAN SAAT INI -->
+                    <div class="current-challenge-info">
+                        <div class="challenge-level-badge" id="current-challenge-level">
+                            Level Kata: Pemula
+                        </div>
+                        <div class="challenge-wpm-req" id="current-wpm-requirement">
+                            Req: 0 WPM
+                        </div>
+                        <div class="challenge-stats">
+                            <div class="challenge-stat">
+                                <span>Rekor:</span>
+                                <span class="challenge-stat-value" id="challenge-record">0 WPM</span>
+                            </div>
+                            <div class="challenge-stat">
+                                <span>Tantangan Unlock:</span>
+                                <span class="challenge-stat-value" id="unlocked-count">0/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KONTROL TANTANGAN -->
+                <div class="challenge-controls">
+                    <div class="challenge-level-control">
+                        <label for="challenge-word-level">Level Kata:</label>
+                        <select id="challenge-word-level" class="challenge-level-selector"
+                            onchange="updateChallengeWordLevel()">
+                            <option value="1">Level 1: Pemula</option>
+                            <option value="2">Level 2: Mudah</option>
+                            <option value="3">Level 3: Normal</option>
+                            <option value="4">Level 4: Sulit</option>
+                            <option value="5">Level 5: Legenda</option>
+                        </select>
+                    </div>
+
+                    <!-- TOMBOL LIHAT TANTANGAN AKTIF -->
+                    <button onclick="showActiveChallengeInfo()" class="btn-action btn-blue-outline"
+                        id="active-challenge-btn" style="display: none;">
+                        🔍 Lihat Tantangan Aktif
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL TANTANGAN AKTIF -->
+            <div class="active-challenge-header" id="active-challenge-panel">
+                <div class="active-challenge-title">
+                    <span id="active-challenge-icon">🎯</span>
+                    <h3 id="active-challenge-name">Tantangan Aktif</h3>
+                </div>
+                <div class="active-challenge-details">
+                    <div class="active-challenge-detail">
+                        <span class="detail-label">Mode</span>
+                        <span class="detail-value" id="active-challenge-mode">-</span>
+                    </div>
+                    <div class="active-challenge-detail">
+                        <span class="detail-label">Level Tantangan</span>
+                        <span class="detail-value" id="active-challenge-difficulty">-</span>
+                    </div>
+                    <div class="active-challenge-detail">
+                        <span class="detail-label">Level Kata</span>
+                        <span class="detail-value" id="active-word-level">-</span>
+                    </div>
+                    <div class="active-challenge-detail">
+                        <span class="detail-label">Requirement</span>
+                        <span class="detail-value wpm" id="active-wpm-req">-</span>
+                    </div>
+                    <div class="active-challenge-detail">
+                        <span class="detail-label">Rekor Anda</span>
+                        <span class="detail-value" id="active-user-record">-</span>
+                    </div>
+                    <div class="active-challenge-detail">
+                        <button onclick="cancelChallenge()" class="btn-action btn-blue" style="margin-top: 8px;">
+                            ✕ Batalkan Tantangan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KARTU-KARTU TANTANGAN -->
+            <div class="challenges-grid">
+                <!-- TANTANGAN 1: NUMERIC MASTER -->
+                <div id="card-numeric-challenge" class="challenge-card locked"
+                    onclick="handleChallengeClick('numeric')">
+                    <div class="challenge-status-icon">🔒</div>
+                    <div class="challenge-icon">🔢</div>
+                    <div class="challenge-info">
+                        <h3>Numeric Master</h3>
+                        <p>Kata bercampur angka. Unlock: 20 WPM | Level 1: 35 WPM</p>
+                        <div class="challenge-progress">
+                            <span class="badge-mode mode-green">Level 1</span>
+                            <span class="challenge-xp">0/100 XP</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="level-stars inline-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star super">⭐</span>
+                        </div>
+                        <span class="badge-mode mode-green difficulty-easy">Numbers</span>
+                    </div>
+                    <div class="challenge-level">
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Req: 35 WPM</span>
+                    </div>
+                </div>
+
+                <!-- TANTANGAN 2: SYMBOLIC PRO -->
+                <div id="card-symbol-challenge" class="challenge-card locked" onclick="handleChallengeClick('symbol')">
+                    <div class="challenge-status-icon">🔒</div>
+                    <div class="challenge-icon">#️⃣</div>
+                    <div class="challenge-info">
+                        <h3>Symbolic Pro</h3>
+                        <p>Kata bercampur simbol. Unlock: 25 WPM | Level 1: 40 WPM</p>
+                        <div class="challenge-progress">
+                            <span class="badge-mode mode-orange">Level 1</span>
+                            <span class="challenge-xp">0/120 XP</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="level-stars inline-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star super">⭐</span>
+                        </div>
+                        <span class="badge-mode mode-orange difficulty-medium">Symbols</span>
+                    </div>
+                    <div class="challenge-level">
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Req: 40 WPM</span>
+                    </div>
+                </div>
+
+                <!-- TANTANGAN 3: SUDDEN DEATH -->
+                <div id="card-sudden-death" class="challenge-card locked" onclick="handleChallengeClick('sudden')">
+                    <div class="challenge-status-icon">🔒</div>
+                    <div class="challenge-icon">💀</div>
+                    <div class="challenge-info">
+                        <h3>Sudden Death</h3>
+                        <p>Satu kesalahan = GAGAL. Unlock: 30 WPM | Level 1: 45 WPM</p>
+                        <div class="challenge-progress">
+                            <span class="badge-mode mode-red">Level 1</span>
+                            <span class="challenge-xp">0/150 XP</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="level-stars inline-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star super">⭐</span>
+                        </div>
+                        <span class="badge-mode mode-red difficulty-hard">Perfect Acc</span>
+                    </div>
+                    <div class="challenge-level">
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Req: 45 WPM</span>
+                    </div>
+                </div>
+
+                <!-- TANTANGAN 4: FORBIDDEN LETTERS -->
+                <div id="card-exclude-mode" class="challenge-card locked" onclick="handleChallengeClick('exclude')">
+                    <div class="challenge-status-icon">🔒</div>
+                    <div class="challenge-icon">🚫</div>
+                    <div class="challenge-info">
+                        <h3>Forbidden Letters</h3>
+                        <p>Ketik tanpa huruf tertentu. Unlock: 35 WPM | Level 1: 50 WPM</p>
+                        <div class="challenge-progress">
+                            <span class="badge-mode mode-purple">Level 1</span>
+                            <span class="challenge-xp">0/180 XP</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="level-stars inline-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star super">⭐</span>
+                        </div>
+                        <span class="badge-mode mode-purple difficulty-expert">Word Filter</span>
+                    </div>
+                    <div class="challenge-level">
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Req: 50 WPM</span>
+                    </div>
+                </div>
+
+                <!-- TANTANGAN 5: NO SPACE ZONE -->
+                <div id="card-no-space" class="challenge-card locked" onclick="handleChallengeClick('nospace')">
+                    <div class="challenge-status-icon">🔒</div>
+                    <div class="challenge-icon">🚧</div>
+                    <div class="challenge-info">
+                        <h3>No Space Zone</h3>
+                        <p>Semua spasi dihapus! Unlock: 40 WPM | Level 1: 55 WPM</p>
+                        <div class="challenge-progress">
+                            <span class="badge-mode mode-blue">Level 1</span>
+                            <span class="challenge-xp">0/200 XP</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="level-stars inline-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star super">⭐</span>
+                        </div>
+                        <span class="badge-mode mode-blue difficulty-hard">Non-Stop</span>
+                    </div>
+                    <div class="challenge-level">
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Req: 55 WPM</span>
+                    </div>
+                </div>
+
+                <!-- TANTANGAN 6: GHOST RACE -->
+                <div id="card-ghost-race" class="challenge-card locked" onclick="handleChallengeClick('ghost')">
+                    <div class="challenge-status-icon">🔒</div>
+                    <div class="challenge-icon">👻</div>
+                    <div class="challenge-info">
+                        <h3>Ghost Race</h3>
+                        <p>Lawan rekor tertinggimu. Unlock: 50 WPM | Level 1: 60 WPM</p>
+                        <div class="challenge-progress">
+                            <span class="badge-mode mode-ghost">Level 1</span>
+                            <span class="challenge-xp">0/250 XP</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="level-stars inline-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star super">⭐</span>
+                        </div>
+                        <span class="badge-mode mode-ghost difficulty-expert">Record Match</span>
+                    </div>
+                    <div class="challenge-level">
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Req: 60 WPM</span>
+                    </div>
+                </div>
+                
+                <!-- TANTANGAN 7: TIME ATTACK -->
+                <div id="card-timer-challenge" class="challenge-card locked" onclick="handleChallengeClick('timer')">
+                    <div class="challenge-status-icon">🔒</div>
+                    <div class="challenge-icon">⏱️</div>
+                    <div class="challenge-info">
+                        <h3>Time Attack</h3>
+                        <p>Selesaikan sebelum waktu habis! Unlock: 60 WPM | Level 1: 65 WPM</p>
+                        <div class="challenge-progress">
+                            <span class="badge-mode mode-orange">Level 1</span>
+                            <span class="challenge-xp">0/300 XP</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="level-stars inline-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star super">⭐</span>
+                        </div>
+                        <span class="badge-mode mode-orange difficulty-master">Beat Clock</span>
+                    </div>
+                    <div class="challenge-level">
+                        <span style="font-size: 0.7rem; color: #94a3b8;">Req: 65 WPM</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 3: DASHBOARD -->
+        <section id="dashboard-page" class="page">
+            <!-- HEADER DASHBOARD -->
+            <div class="dashboard-header">
+                <h2>Statistik Latihanmu</h2>
+                <p>Pantau perkembangan kecepatan dan akurasimu di sini.</p>
+            </div>
+            
+            <!-- KARTU STATISTIK -->
+            <div class="stats-grid">
+                <div class="stat-card db-card-top">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-info">
+                        <h3>Top Speed</h3>
+                        <p id="top-speed">0 WPM</p>
+                    </div>
+                </div>
+                <div class="stat-card db-card-daily">
+                    <div class="card-icon">📅</div>
+                    <div class="card-info">
+                        <h3>Hari Ini</h3>
+                        <p id="daily-avg">0 WPM</p>
+                    </div>
+                </div>
+                <div class="stat-card db-card-weekly">
+                    <div class="card-icon">📊</div>
+                    <div class="card-info">
+                        <h3>Minggu Ini</h3>
+                        <p id="weekly-avg">0 WPM</p>
+                    </div>
+                </div>
+                <div class="stat-card db-card-monthly">
+                    <div class="card-icon">🏆</div>
+                    <div class="card-info">
+                        <h3>Bulan Ini</h3>
+                        <p id="monthly-avg">0 WPM</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KONTROL DASHBOARD -->
+            <div class="dashboard-controls">
+                <!-- FILTER -->
+                <div class="filter-group">
+                    <div class="input-wrapper">
+                        <label>Bahasa</label>
+                        <select id="filter-language" onchange="refreshDashboard()">
+                            <option value="id">Indonesia</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Rentang Waktu</label>
+                        <select id="filter-time" onchange="refreshDashboard()">
+                            <option value="all">Semua Waktu</option>
+                            <option value="today">Hari Ini</option>
+                            <option value="weekly">Minggu Ini</option>
+                            <option value="monthly">Bulan Ini</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- BACKUP & IMPORT -->
+                <div class="backup-group">
+                    <button onclick="exportData()" class="btn-action btn-blue-outline">📤 Ekspor JSON</button>
+                    <button onclick="document.getElementById('import-file').click()" class="btn-action btn-purple">
+                        📥 Impor JSON
+                    </button>
+                    <input type="file" id="import-file" hidden onchange="handleImport(event)">
+                </div>
+            </div>
+
+            <!-- TABEL HISTORY -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Kecepatan</th>
+                            <th>Akurasi</th>
+                            <th>Level</th>
+                            <th>Mode</th>
+                            <th>Durasi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body"></tbody>
+                </table>
+            </div>
+            
+            <!-- PAGINATION -->
+            <div id="pagination" class="pagination-container">
+                <button id="prev-btn" class="btn-nav" onclick="changePage(-1)">← Prev</button>
+                <span id="page-info">Halaman 1</span>
+                <button id="next-btn" class="btn-nav" onclick="changePage(1)">Next →</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- MODAL ALERT DEFAULT -->
+    <div id="custom-alert" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modal-icon"></div>
+            <h2 id="modal-title">Selesai!</h2>
+            <p id="modal-message">Hasil latihan kamu sudah tersimpan.</p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button onclick="repeatTest()" class="btn-action btn-repeat">🔁 Ulangi</button>
+                <button onclick="closeModal()" class="btn-action btn-primary">Lanjutkan (Enter)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KONTROL SUARA -->
+    <div class="sound-control">
+        <button id="sound-toggle" class="sound-btn active" onclick="toggleSound()">🔊</button>
+        <button id="music-toggle" class="sound-btn" onclick="toggleMusic()">🎵</button>
+    </div>
+
+    <!-- SCRIPT JAVASCRIPT -->
+    <script src="script.js"></script>
+</body>
+</html>
