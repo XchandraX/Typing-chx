@@ -89,16 +89,6 @@ TypingMaster Native Pro adalah aplikasi **latihan mengetik berbasis web** yang d
 
 ---
 
-## 📈 Rencana Pengembangan (Opsional)
-
-- Mode multiplayer (online)
-- Export data ke CSV
-- Leaderboard global
-- Audio feedback
-- Progressive difficulty AI
-
----
-
 ## 👤 Author
 
 Dikembangkan oleh **Chandra**  
